@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GDIP-TEST-TUBE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fafafa;
+      color: #aaa;
+      padding: 10px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .columns {
+      display: flex;
+      align-items: flex-start; /* Align the columns to the top */
+      justify-content: center; /* Center the columns horizontally */
+      margin-top: 20px;
+    }
+
+    .left-column, .right-column {
+      text-align: center;
+      padding: 20px;
+      flex: 1; /* Make the left column expand to fill available space */
+    }
+
+    .left-column {
+      border-right: 5px solid #ccc; /* Add this line for the border */
+      padding-right: 20px; /* Add spacing to the right of the left column */
+      flex: 1; /* Make the left column expand to fill available space */
+    }
+
+    .column-group {
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      margin: 10px;
+      background-color: #fff;
+      flex: 1; /* Make the left column expand to fill available space */
+    }
+
+    .slider-group {
+  
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      margin: 10px;
+      background-color: #fff;
+      flex: 1; /* Make the slider-group expand to fill available space within the left column */
+    }
+
+    .subtitle {
+      font-weight: bold;
+    }
+
+    input[type="range"] {
+      width: 80%;
+    }
+
+    #sliderValue {
+      font-size: 24px;
+      color: #333;
+    }
+
+    button {
+      width: 100px;
+      height: 40px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      padding: 10px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>GDIP Test Tube Dev</h1>
+  </div>
+  <div class="columns">
+    <div class="left-column">
+      <div class="column-group">
+        <p class="subtitle">Servo Control</p>
+        <div class="slider-group">
+          <p>Servo 1 <span id="sliderValue1"></span></p>
+          <input type="range" id="slider1" min="0" max="100" value="0" oninput="updateSlider(1, this.value)">
+        </div>
+        <div class="slider-group">
+          <p>Servo 2 <span id="sliderValue2"></span></p>
+          <input type="range" id="slider2" min="0" max="100" value="0" oninput="updateSlider(2, this.value)">
+        </div>
+        <div class="slider-group">
+          <p>Servo 3 <span id="sliderValue3"></span></p>
+          <input type="range" id="slider3" min="0" max="100" value="0" oninput="updateSlider(3, this.value)">
+        </div>
+        <div class="slider-group">
+          <p>Servo 4 <span id="sliderValue4"></span></p>
+          <input type="range" id="slider4" min="0" max="100" value="0" oninput="updateSlider(4, this.value)">
+        </div>
+        <div class="slider-group">
+          <p>Servo 5 <span id="sliderValue5"></span></p>
+          <input type="range" id="slider5" min="0" max "100" value="0" oninput="updateSlider(5, this.value)">
+        </div>
+        <div class="slider-group">
+          <p>Servo 6 <span id="sliderValue6"></span></p>
+          <input type="range" id="slider6" min="0" max="100" value="0" oninput="updateSlider(6, this.value)">
+        </div>
+      </div>
+    </div>
+
+    <div class="right-column">
+      <div class="column-group">
+        <p class="subtitle">Control Panel</p>
+        <input type="text" id="userInput" placeholder="Enter text here">
+        <button id="clickButtonChangeColour" onclick="handleButtonClickChangeColour()">Change Colour</button>
+        <button id="clickButtonStressTest" onclick="handleButtonClickStressTest()">Stress Test</button>
+        <button id="sendButton" onclick="sendUserInput()">Send to ESP32</button>
+      </div>
+    </div>
+  </div>
+    <script>
+
+    function checkChanges() 
+    {
+      fetch("/check")
+        .then(response => response.text())
+        .then(data => {
+        const sliderValue1 = document.getElementById("sliderValue1");
+        const sliderValue2 = document.getElementById("sliderValue2");
+        sliderValue1.textContent = data;
+        sliderValue2.textContent = data;
+      });
+    }
+
+    function updateSlider(servo, value) 
+    {
+      fetch("/update?servo=" + servo + "&value=" + value)
+        .then(response => response.text())
+        .then(data => {
+        checkChanges();
+      });
+    }
+
+    function handleButtonClickChangeColour() {
+      // Send an AJAX request to the server to handle the button click
+      fetch("/button_click_change_colour")
+        .then(response => response.text())
+        .then(data => {
+          // Display a message or perform other actions if needed
+          console.log(data);
+        });
+    }
+
+    function handleButtonClickStressTest() {
+      // Send an AJAX request to the server to handle the button click
+      fetch("/button_click_stress_test")
+        .then(response => response.text())
+        .then(data => {
+          // Display a message or perform other actions if needed
+          console.log(data);
+        });
+    }
+
+    function sendUserInput() {
+        const userInput = document.getElementById("userInput").value;
+
+        // Send the user input to the ESP32 (replace this with your ESP32 code)
+        fetch("/send_input?text=" + userInput)
+            .then(response => response.text())
+            .then(data => {
+                // Display the response (e.g., message from ESP32) in the text box
+                const errorMessage = document.getElementById("errorMessage");
+                errorMessage.value = data;
+            });
+    }
+
+    setInterval(checkChanges, 5000); // Check for changes every 5 seconds
+    checkChanges(); // Initial check
+  </script>
+</body>
+</html>
