@@ -23,7 +23,7 @@
 /************************** FUNCTION PROTOTYPES *************************/
 /******************************* CONSTANTS ******************************/
 
-const char* ssid = "iPhone";
+const char* ssid = "ARM";
 const char* password = "12345678";
 
 /******************************* VARIABLES ******************************/
@@ -39,18 +39,16 @@ servo_slider_values_t servoSliderValues;
 
 void wifi_initialise()
 {
-      // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
+  // Set Wi-Fi mode to AP mode
+  WiFi.mode(WIFI_AP);
 
-  while (WiFi.status() != WL_CONNECTED) 
-  {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
-  }
+  // Configure ESP32 to act as an AP
+  WiFi.softAP(ssid, password);
 
-  Serial.println("Connected to WiFi");
-
-  Serial.println(WiFi.localIP());
+  // Obtain and print the ESP32's IP address
+  IPAddress apIP = WiFi.softAPIP();
+  Serial.print("IP address: ");
+  Serial.println(apIP);
 
   // Initialize SPIFFS
   if(!SPIFFS.begin(true))
@@ -60,12 +58,11 @@ void wifi_initialise()
   }
 
   // Serve HTML page from SPIFFS
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-  {
-  
-    request->send(SPIFFS, "/index.html", "text/html");
-  
-  });
+  server.onNotFound([](AsyncWebServerRequest *request)
+{
+  // Serve the HTML page when the client accesses any path
+  request->send(SPIFFS, "/index.html", "text/html");
+});
 
   // Handle AJAX request to check for changes
   server.on("/check", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -89,10 +86,11 @@ void wifi_initialise()
 
         case 1:
         {
+          // Serial.println("Slider 1");
           int sliderValue = request->getParam("value")->value().toInt();
           // Output the slider value over UART
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
+          // Serial.print("Slider Value: ");
+          // Serial.println(sliderValue);
           wifiSliderValue = sliderValue;
 
           servoSliderValues.servo1 = sliderValue;

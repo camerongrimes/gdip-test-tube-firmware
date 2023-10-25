@@ -19,12 +19,7 @@
 
 /******************************* DEFINES ********************************/
 
-#define SERVO_1_PWM 2
-#define SERVO_2_PWM 3
-#define SERVO_3_PWM 0
-#define SERVO_4_PWM 1
-#define SERVO_5_PWM 6
-#define SERVO_6_PWM 5
+
 
 /******************************** ENUMS *********************************/
 /***************************** STRUCTURES *******************************/
@@ -32,11 +27,14 @@
 /******************************* CONSTANTS ******************************/
 /******************************* VARIABLES ******************************/
 
-int led = 6;           // the PWM pin the LED is attached to
-int brightness = 0;    // how bright the LED is
-int fadeAmount = 5;    // how many points to fade the LED by
+
+int servoPins[] = {2, 4, 5, 6, 7};
+int servoNum = sizeof(servoPins) / sizeof(servoPins[0]);
 
 servo_slider_values_t sliderValues;
+
+// Published values for SG90 servos; adjust if needed
+
 
 void pwm_setup(void);
 void pwm_write(void);
@@ -46,11 +44,9 @@ void pwm_write(void);
 
 void setup() 
 {
-
   debug_initialise();
   wifi_initialise();
   pwm_setup();
-
 }
 
 
@@ -62,52 +58,69 @@ void loop()
 /*************************** PRIVATE FUNCTIONS ***************************/
 
 
-void pwm_setup(void)
-{
-
-    pinMode(SERVO_1_PWM, OUTPUT);  // sets the pin as output
-
-    pinMode(SERVO_2_PWM, OUTPUT);  // sets the pin as output
-
-    pinMode(SERVO_3_PWM, OUTPUT);  // sets the pin as output
-
-    pinMode(SERVO_4_PWM, OUTPUT);  // sets the pin as output
-
-    pinMode(SERVO_5_PWM, OUTPUT);  // sets the pin as output
-
-  /*
-    ledcSetup(0, 5000, 8); // Configure PWM channel, frequency, and resolution
-    ledcAttachPin(SERVO_1_PWM, 0); // Attach the channel to the pin
-
-    ledcSetup(1, 5000, 8); // Configure PWM channel, frequency, and resolution
-    ledcAttachPin(SERVO_2_PWM, 1); // Attach the channel to the pin
-
-    ledcSetup(2, 5000, 8); // Configure PWM channel, frequency, and resolution
-    ledcAttachPin(SERVO_3_PWM, 2); // Attach the channel to the pin
-
-    ledcSetup(3, 5000, 8); // Configure PWM channel, frequency, and resolution
-    ledcAttachPin(SERVO_4_PWM, 3); // Attach the channel to the pin
-
-    ledcSetup(4, 5000, 8); // Configure PWM channel, frequency, and resolution
-    ledcAttachPin(SERVO_5_PWM, 4); // Attach the channel to the pin
-
-    ledcSetup(5, 5000, 8); // Configure PWM channel, frequency, and resolution
-    ledcAttachPin(SERVO_6_PWM, 5); // Attach the channel to the pin
-    */
-
+void pwm_setup(void) {
+  for (int i = 0; i < servoNum; i++) {
+    ledcSetup(i, 50, 14); // PWM frequency: 50 Hz, resolution: 16 bits
+    ledcAttachPin(servoPins[i], i); // Attach PWM channel to pin
+  }
 }
+
 
 void pwm_write(void)
 {
-  analogWrite(SERVO_1_PWM, wifi_get_slider_values().servo1);
+  // Serial.println(wifi_get_slider_values().servo1);
 
-  analogWrite(SERVO_2_PWM, wifi_get_slider_values().servo2*2.55);
+  ledcWrite(0, wifi_get_slider_values().servo1);
+  ledcWrite(1, wifi_get_slider_values().servo2);
+  ledcWrite(2, wifi_get_slider_values().servo3);
+  ledcWrite(3, wifi_get_slider_values().servo4);
+  ledcWrite(4, wifi_get_slider_values().servo5);
 
-  analogWrite(SERVO_3_PWM, wifi_get_slider_values().servo3*2.55);
-
-  analogWrite(SERVO_4_PWM, wifi_get_slider_values().servo4*2.55);
-
-  analogWrite(SERVO_5_PWM, wifi_get_slider_values().servo5*2.55);
-
+  // delay(10);
 }
+
+
+
+
+
+
+
+// #include <Arduino.h>
+
+// const int numServos = 5;
+// int servoPins[numServos] = {2, 4, 5, 6, 7};
+// int minAngle = 60; // Minimum angle in degrees
+// int maxAngle = 100; // Maximum angle in degrees
+// int delayTime = 10; // Delay in milliseconds for each step
+// int stepSize = 1; // Step size for sweeping
+
+// void setup() {
+//   for (int i = 0; i < numServos; i++) {
+//     ledcSetup(i, 50, 14); // PWM frequency: 50 Hz, resolution: 16 bits
+//     ledcAttachPin(servoPins[i], i); // Attach PWM channel to pin
+//   }
+// }
+
+// void loop() {
+//   for (int angle = minAngle; angle <= maxAngle; angle += stepSize) {
+//     for (int i = 0; i < numServos; i++) {
+//       int dutyCycle = map(angle, 0, 180, 500, 2500); // Map angle to PWM duty cycle
+//       ledcWrite(i, dutyCycle);
+//     }
+//     delay(delayTime);
+//   }
+  
+//   for (int angle = maxAngle; angle >= minAngle; angle -= stepSize) {
+//     for (int i = 0; i < numServos; i++) {
+//       int dutyCycle = map(angle, 0, 180, 500, 2500); // Map angle to PWM duty cycle
+//       ledcWrite(i, dutyCycle);
+//     }
+//     delay(delayTime);
+//   }
+// }
+
+
+
+
+
 
