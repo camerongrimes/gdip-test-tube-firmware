@@ -16,6 +16,7 @@
 #include "wifi.hpp"
 #include "rgb.hpp"
 #include "debug.hpp"
+#include "kinematics.hpp"
 
 /******************************* DEFINES ********************************/
 
@@ -27,6 +28,7 @@
 /******************************* CONSTANTS ******************************/
 /******************************* VARIABLES ******************************/
 
+float baseAngle, joint1Angle, joint2Angle;
 
 int servoPins[] = {2, 4, 5, 6, 7};
 int servoNum = sizeof(servoPins) / sizeof(servoPins[0]);
@@ -37,7 +39,7 @@ servo_slider_values_t sliderValues;
 
 
 void pwm_setup(void);
-void pwm_write(void);
+void pwm_write(double S1, double S2, double S3);
 
 
 /*************************** PUBLIC FUNCTIONS ***************************/
@@ -51,8 +53,9 @@ void setup()
 
 
 void loop() 
-{
-  pwm_write();
+{ 
+  calculateIK(wifi_get_slider_values().servo1, wifi_get_slider_values().servo2, wifi_get_slider_values().servo3, baseAngle, joint1Angle, joint2Angle);
+  pwm_write(baseAngle, joint1Angle, joint2Angle);
 }
 
 /*************************** PRIVATE FUNCTIONS ***************************/
@@ -66,17 +69,21 @@ void pwm_setup(void) {
 }
 
 
-void pwm_write(void)
+void pwm_write(double S1, double S2, double S3)
 {
-  // Serial.println(wifi_get_slider_values().servo1);
+  // Serial.println("Ang");
+  // Serial.println(S1);
+  // Serial.println(S2);
+  // Serial.println(S3);
+  // Serial.println("\n");
 
-  ledcWrite(0, wifi_get_slider_values().servo1);
-  ledcWrite(1, wifi_get_slider_values().servo2);
-  ledcWrite(2, wifi_get_slider_values().servo3);
-  ledcWrite(3, wifi_get_slider_values().servo4);
-  ledcWrite(4, wifi_get_slider_values().servo5);
+  delay(100);
 
-  // delay(10);
+  ledcWrite(0, map(S1, 0, 180, 500, 2000));
+  ledcWrite(1, map(S2, 0, 180, 500, 2000));
+  ledcWrite(2, map(S3, 0, 180, 500, 2000));
+  ledcWrite(3, map(wifi_get_slider_values().servo4, 0, 180, 500, 2000));
+  ledcWrite(4, map(wifi_get_slider_values().servo5, 0, 180, 500, 2000));
 }
 
 

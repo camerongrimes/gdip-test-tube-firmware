@@ -17,12 +17,12 @@
 typedef struct 
 {
 
-    int servo1;
-    int servo2;
-    int servo3;
-    int servo4;
-    int servo5;
-    int servo6;
+    float servo1 = 90;
+    float servo2 = 90;
+    float servo3 = 90;
+    float servo4 = 90;
+    float servo5 = 90;
+    float servo6 = 90;
 
 }servo_slider_values_t;
 

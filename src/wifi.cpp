@@ -86,11 +86,11 @@ void wifi_initialise()
 
         case 1:
         {
-          // Serial.println("Slider 1");
+          Serial.println("Slider 1");
           int sliderValue = request->getParam("value")->value().toInt();
           // Output the slider value over UART
-          // Serial.print("Slider Value: ");
-          // Serial.println(sliderValue);
+          Serial.print("Slider Value: ");
+          Serial.println(sliderValue);
           wifiSliderValue = sliderValue;
 
           servoSliderValues.servo1 = sliderValue;
