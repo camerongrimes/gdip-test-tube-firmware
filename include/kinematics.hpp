@@ -1,15 +1,27 @@
 #ifndef ROBOT_ARM_KINEMATICS_H
 #define ROBOT_ARM_KINEMATICS_H
 
-#include <cmath>
+typedef struct
+{
 
-// Constants for the arm dimensions
-extern double baseLength;
-extern double joint1Length;
-extern double joint2Length;
+    double base;
+    double humerus;
+    double ulna;
+    double wrist;
 
+}armServoAngles_t;
 
-// Function to calculate inverse kinematics
-void calculateIK(float x, float y, float z, float& baseAngle, float& joint1Angle, float& joint2Angle);
+typedef struct
+{
+
+    double x;
+    double y;
+    double z;
+    double wristAngle;
+    double gripAngle;
+
+}armPositionData_t;
+
+armServoAngles_t set_arm_position(armPositionData_t armPosition);
 
 #endif // ROBOT_ARM_KINEMATICS_H

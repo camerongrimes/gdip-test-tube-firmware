@@ -1,6 +1,6 @@
 /**
  *
- * @file servo.hpp
+ * @file pwm.hpp
  * @brief UART for serial debug.
  * @date 2023/10/10
  * @par GDIP Test Tube (Group D)
@@ -16,7 +16,8 @@
 /***************************** STRUCTURES *******************************/
 /************************** FUNCTION PROTOTYPES *************************/
 
-
+void pwm_setup(void);
+void pwm_write(int a, int b, int c, int w, int g);
 
 /******************************* GLOBALS ********************************/
 /* Globals are to be avoided unless justified and documented */

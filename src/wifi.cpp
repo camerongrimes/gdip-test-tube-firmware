@@ -16,6 +16,7 @@
 /**************************** USER INCLUDES *****************************/
 
 #include "wifi.hpp"
+#include "kinematics.hpp"
 
 /******************************* DEFINES ********************************/
 /******************************** ENUMS *********************************/
@@ -34,6 +35,10 @@ int wifiSliderValue = 0;
 int wifiColourSelect = 0;
 
 servo_slider_values_t servoSliderValues;
+
+wifi_cmd_state_t state = STEADY_STATE;
+
+String userText;
 
 /*************************** PUBLIC FUNCTIONS ***************************/
 
@@ -86,26 +91,25 @@ void wifi_initialise()
 
         case 1:
         {
-          Serial.println("Slider 1");
+
           int sliderValue = request->getParam("value")->value().toInt();
           // Output the slider value over UART
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
-          wifiSliderValue = sliderValue;
 
           servoSliderValues.servo1 = sliderValue;
+
+          Serial.printf("Grid position: %.2f %.2f %.2f\n", servoSliderValues.servo1, servoSliderValues.servo2, servoSliderValues.servo3);
 
           break;
         }
 
         case 2:
         {
-          Serial.println("Slider 2");
+
           int sliderValue = request->getParam("value")->value().toInt();
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
 
           servoSliderValues.servo2 = sliderValue;
+
+          Serial.printf("Grid position: %.2f %.2f %.2f\n", servoSliderValues.servo1, servoSliderValues.servo2, servoSliderValues.servo3);
 
           
           break;
@@ -113,12 +117,11 @@ void wifi_initialise()
 
         case 3:
         {
-          Serial.println("Slider 3");
           int sliderValue = request->getParam("value")->value().toInt();
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
 
           servoSliderValues.servo3 = sliderValue;
+
+          Serial.printf("Grid position: %.2f %.2f %.2f\n", servoSliderValues.servo1, servoSliderValues.servo2, servoSliderValues.servo3);
 
           break;
         }
@@ -174,29 +177,45 @@ void wifi_initialise()
   });
 
   
-  server.on("/button_click_change_colour", HTTP_GET, [](AsyncWebServerRequest *request)
+  server.on("/button_click_park_arm", HTTP_GET, [](AsyncWebServerRequest *request)
   {
     // Your code to handle the button click should go here
     // For demonstration purposes, let's just turn on an LED on pin 13
-    Serial.println("Changing colour");
+    Serial.println("Parking ARM, changing state");
 
-    wifiColourSelect++;
+    state = PARK;
 
-    if(wifiColourSelect == 3)
-    {
-      wifiColourSelect = 0;
-    }
+    // Respond to the client
+    request->send(200, "text/plain", "Button Clicked");
+  });
+
+
+  server.on("/button_click_start_record", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    // Your code to handle the button click should go here
+    // For demonstration purposes, let's just turn on an LED on pin 13
+    state = START_RECORD;
     
     // Respond to the client
     request->send(200, "text/plain", "Button Clicked");
   });
 
 
-  server.on("/button_click_stress_test", HTTP_GET, [](AsyncWebServerRequest *request)
+  server.on("/button_click_record", HTTP_GET, [](AsyncWebServerRequest *request)
   {
     // Your code to handle the button click should go here
     // For demonstration purposes, let's just turn on an LED on pin 13
-    Serial.println("Stress test");
+    state = RECORD;
+    
+    // Respond to the client
+    request->send(200, "text/plain", "Button Clicked");
+  });
+
+    server.on("/button_click_end_record", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    // Your code to handle the button click should go here
+    // For demonstration purposes, let's just turn on an LED on pin 13
+    state = END_RECORD;
     
     // Respond to the client
     request->send(200, "text/plain", "Button Clicked");
@@ -208,7 +227,11 @@ void wifi_initialise()
   {
     if (request->hasParam("text")) 
     {
-      String userText = request->getParam("text")->value();
+      
+      userText = request->getParam("text")->value();
+
+      state = USER_INPUT;
+
       // Display the user input on the ESP32's UART
       Serial.print("User Input: ");
       Serial.println(userText);
@@ -225,6 +248,21 @@ void wifi_initialise()
 
 }
 
+
+ armPositionData_t  wifi_get_latest_grid_position(void)
+ {
+    armPositionData_t data;
+
+    data.x = servoSliderValues.servo1;
+    data.y = servoSliderValues.servo2;
+    data.z = servoSliderValues.servo3;
+    data.wristAngle = servoSliderValues.servo4;
+    data.gripAngle = servoSliderValues.servo5;
+
+    return data;
+
+ }
+
 int wifi_get_slider_value(void)
 {
     return wifiSliderValue;
@@ -239,6 +277,22 @@ int wifi_get_colour_select(void)
 servo_slider_values_t wifi_get_slider_values(void)
 {
   return servoSliderValues;
+}
+
+wifi_cmd_state_t wifi_get_cmd_state(void)
+{
+  return state;
+}
+
+
+void wifi_set_cmd_state(wifi_cmd_state_t updatedState)
+{
+  state = updatedState;
+}
+
+String wifi_get_user_input_text(void)
+{
+  return userText;
 }
 
 

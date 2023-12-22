@@ -100,16 +100,16 @@
       <div class="column-group">
         <p class="subtitle">Servo Control</p>
         <div class="slider-group">
-          <p>Servo 1 <span id="sliderValue1"></span></p>
-          <input type="range" id="slider1" min="0" max="180" value="90" oninput="updateSlider(1, this.value)">
+          <p> X <span id="sliderValue1"></span></p>
+          <input type="range" id="slider1" min="0" max="80" value="33" oninput="updateSlider(1, this.value)">
         </div>
         <div class="slider-group">
-          <p>Servo 2 <span id="sliderValue2"></span></p>
-          <input type="range" id="slider2" min="0" max="180" value="90" oninput="updateSlider(2, this.value)">
+          <p> Y <span id="sliderValue2"></span></p>
+          <input type="range" id="slider2" min="150" max="350" value="231" oninput="updateSlider(2, this.value)">
         </div>
         <div class="slider-group">
-          <p>Servo 3 <span id="sliderValue3"></span></p>
-          <input type="range" id="slider3" min="0" max="180" value="90" oninput="updateSlider(3, this.value)">
+          <p> Z <span id="sliderValue3"></span></p>
+          <input type="range" id="slider3" min="150" max="350" value="295" oninput="updateSlider(3, this.value)">
         </div>
         <div class="slider-group">
           <p>Servo 4 <span id="sliderValue4"></span></p>
@@ -126,9 +126,11 @@
       <div class="column-group">
         <p class="subtitle">Control Panel</p>
         <input type="text" id="userInput" placeholder="Enter text here">
-        <button id="clickButtonChangeColour" onclick="handleButtonClickChangeColour()">Change Colour</button>
-        <button id="clickButtonStressTest" onclick="handleButtonClickStressTest()">Stress Test</button>
-        <button id="sendButton" onclick="sendUserInput()">Send to ESP32</button>
+        <button id="clickParkArm" onclick="handleButtonParkArm()">PARK</button>
+        <button id="clickStartRecording" onclick="handleButtonStartRecording()">START</button>
+        <button id="clickButtonStressTesta" onclick="handleButtonRecord()">RECORD</button>
+        <button id="clickButtonStressTestb" onclick="handleButtonEndRecord()">END</button>
+        <button id="sendButton" onclick="sendUserInput()">SEND CMD</button>
       </div>
     </div>
   </div>
@@ -155,9 +157,9 @@
       });
     }
 
-    function handleButtonClickChangeColour() {
+    function handleButtonParkArm() {
       // Send an AJAX request to the server to handle the button click
-      fetch("/button_click_change_colour")
+      fetch("/button_click_park_arm")
         .then(response => response.text())
         .then(data => {
           // Display a message or perform other actions if needed
@@ -165,9 +167,29 @@
         });
     }
 
-    function handleButtonClickStressTest() {
+    function handleButtonStartRecording() {
       // Send an AJAX request to the server to handle the button click
-      fetch("/button_click_stress_test")
+      fetch("/button_click_start_record")
+        .then(response => response.text())
+        .then(data => {
+          // Display a message or perform other actions if needed
+          console.log(data);
+        });
+    }
+
+    function handleButtonRecord() {
+      // Send an AJAX request to the server to handle the button click
+      fetch("/button_click_record")
+        .then(response => response.text())
+        .then(data => {
+          // Display a message or perform other actions if needed
+          console.log(data);
+        });
+    }
+
+    function handleButtonEndRecord() {
+      // Send an AJAX request to the server to handle the button click
+      fetch("/button_click_end_record")
         .then(response => response.text())
         .then(data => {
           // Display a message or perform other actions if needed
