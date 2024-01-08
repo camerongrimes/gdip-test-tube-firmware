@@ -88,7 +88,6 @@ void wifi_initialise()
         {
           // Serial.println("Slider 1");
           int sliderValue = request->getParam("value")->value().toInt();
-          // Output the slider value over UART
           // Serial.print("Slider Value: ");
           // Serial.println(sliderValue);
           wifiSliderValue = sliderValue;
@@ -100,10 +99,10 @@ void wifi_initialise()
 
         case 2:
         {
-          Serial.println("Slider 2");
+          // Serial.println("Slider 2");
           int sliderValue = request->getParam("value")->value().toInt();
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
+          // Serial.print("Slider Value: ");
+          // Serial.println(sliderValue);
 
           servoSliderValues.servo2 = sliderValue;
 
@@ -113,10 +112,10 @@ void wifi_initialise()
 
         case 3:
         {
-          Serial.println("Slider 3");
+          // Serial.println("Slider 3");
           int sliderValue = request->getParam("value")->value().toInt();
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
+          // Serial.print("Slider Value: ");
+          // Serial.println(sliderValue);
 
           servoSliderValues.servo3 = sliderValue;
 
@@ -125,10 +124,10 @@ void wifi_initialise()
 
         case 4:
         {
-          Serial.println("Slider 4");
+          // Serial.println("Slider 4");
           int sliderValue = request->getParam("value")->value().toInt();
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
+          // Serial.print("Slider Value: ");
+          // Serial.println(sliderValue);
 
           servoSliderValues.servo4 = sliderValue;
 
@@ -137,10 +136,10 @@ void wifi_initialise()
 
         case 5:
         {
-          Serial.println("Slider 5");
+          // Serial.println("Slider 5");
           int sliderValue = request->getParam("value")->value().toInt();
-          Serial.print("Slider Value: ");
-          Serial.println(sliderValue);
+          // Serial.print("Slider Value: ");
+          // Serial.println(sliderValue);
 
           servoSliderValues.servo5 = sliderValue;
 

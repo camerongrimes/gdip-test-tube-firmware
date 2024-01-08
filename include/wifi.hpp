@@ -17,9 +17,9 @@
 typedef struct 
 {
 
-    int servo1;
-    int servo2;
-    int servo3;
+    int servo1 = 0;
+    int servo2 = 100;
+    int servo3 = 150;
     int servo4;
     int servo5;
     int servo6;
