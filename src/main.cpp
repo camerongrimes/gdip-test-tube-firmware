@@ -17,7 +17,7 @@
 
 servo_slider_values_t sliderValues;
 
-int servoPins[] = {2, 4, 5, 6, 7};
+int servoPins[] = {4, 5, 6, 2, 42};
 int numOfPins = 5;
 
 float angleState[] = {90,90,90,45};
@@ -66,7 +66,7 @@ void pwm_write(void)
 
 
   ledcWrite(0, map(angleState[0], 0, 180, 520, 2036));
-  ledcWrite(1, map(angleState[1]+20, 0, 180, 500, 1850));
+  ledcWrite(1, map(angleState[1], 0, 180, 500, 1850));
   ledcWrite(2, map(angleState[2], 180, 0, 500, 1850));
   ledcWrite(3, map(angleState[3], 0, 180, 500, 1850));
 

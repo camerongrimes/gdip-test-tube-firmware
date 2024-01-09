@@ -3,8 +3,8 @@
 
 void calculateServoAngles(float x, float y, float z, float &baseAngle, float &shoulderAngle, float &elbowAngle, float &handAngle) {
     //Define linkage lengths
-    float L1 = 193.0;
-    float L2 = 250.0;
+    float L1 = 210.0;
+    float L2 = 290.0;
     // Calculate angle at base joint (rotation in XY plane)
     baseAngle = atan2(y, x) * 180.0 / M_PI;
     // Calculate the distance to the desired end effector position in 3D space
