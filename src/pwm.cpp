@@ -19,16 +19,17 @@
 /******************************* DEFINES ********************************/
 /******************************** ENUMS *********************************/
 /***************************** STRUCTURES *******************************/
+
 /************************** FUNCTION PROTOTYPES *************************/
 /******************************* CONSTANTS ******************************/
-
-
 /******************************* VARIABLES ******************************/
 
 int servoPins[] = {2, 4, 5, 6, 7};
 int servoNum = sizeof(servoPins) / sizeof(servoPins[0]);
 
 float angleState[4];
+
+armServoAngles_t servoAngles;
 
 /*************************** PUBLIC FUNCTIONS ***************************/
 
@@ -42,17 +43,21 @@ void pwm_setup(void)
   }
 }
 
-void pwm_write(int a, int b, int c, int w, int g)
+armServoAngles_t pwm_write(int a, int b, int c, int w, int g)
 {
 
-  calculateServoAngles(wifi_get_slider_values().servo1,wifi_get_slider_values().servo2,wifi_get_slider_values().servo3,angleState[0],angleState[1],angleState[2],angleState[3]);
+  servoAngles = calculateServoAngles(wifi_get_slider_values().servo1, wifi_get_slider_values().servo2, wifi_get_slider_values().servo3);
 
-  ledcWrite(0, map(angleState[0], 0, 180, 520, 2036));
-  ledcWrite(1, map(angleState[1]+20, 0, 180, 500, 1850));
-  ledcWrite(2, map(angleState[2], 180, 0, 500, 1850));
-  ledcWrite(3, map(angleState[3], 0, 180, 500, 1850));
+  ledcWrite(0, map(servoAngles.base, 0, 180, 520, 2036));
+  ledcWrite(1, map(servoAngles.shoulder + 20, 0, 180, 500, 1850));
+  ledcWrite(2, map(servoAngles.elbow, 180, 0, 500, 1850));
+  ledcWrite(3, map(servoAngles.gripper, 0, 180, 500, 1850));
+
+  return servoAngles;
 
 }
+
+
 
 
 /*************************** PRIVATE FUNCTIONS ***************************/

@@ -308,7 +308,7 @@ programError_t program_play(programName_t name)
 
                 calculatedAngles = set_arm_position(programBank.PROG1.positions[commandIndex]);
 
-                pwm_write(calculatedAngles.base, calculatedAngles.humerus, calculatedAngles.ulna, programBank.PROG1.positions[commandIndex].wristAngle, programBank.PROG1.positions[commandIndex].gripAngle);
+                pwm_write(calculatedAngles.base, calculatedAngles.shoulder, calculatedAngles.elbow, programBank.PROG1.positions[commandIndex].wristAngle, programBank.PROG1.positions[commandIndex].gripAngle);
 
                 Serial.printf("Command [%d]: [x]: %.2f; [y]: %.2f; [z]: %.2f\n", 
                 commandIndex,

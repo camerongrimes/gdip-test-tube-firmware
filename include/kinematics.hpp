@@ -2,17 +2,9 @@
 #define ROBOT_ARM_KINEMATICS_H
 
 
-void calculateServoAngles(float x, float y, float z, float &baseAngle, float &shoulderAngle, float &elbowAngle, float &handAngle);
 
-typedef struct
-{
 
-    double base;
-    double humerus;
-    double ulna;
-    double wrist;
 
-}armServoAngles_t;
 
 typedef struct
 {
@@ -25,6 +17,20 @@ typedef struct
 
 }armPositionData_t;
 
+
+
+typedef struct angleStates
+{
+
+  float base;
+  float shoulder;
+  float elbow;
+  float gripper;
+
+}armServoAngles_t;
+
+
 armServoAngles_t set_arm_position(armPositionData_t armPosition);
+armServoAngles_t calculateServoAngles(float x, float y, float z);
 
 #endif // ROBOT_ARM_KINEMATICS_H
