@@ -57,7 +57,6 @@ servo_slider_values_t wifi_get_slider_values(void);
 wifi_cmd_state_t wifi_get_cmd_state(void);
 void wifi_set_cmd_state(wifi_cmd_state_t updatedState);
 
-armPositionData_t wifi_get_latest_grid_position(void);
 
 String wifi_get_user_input_text(void);
 

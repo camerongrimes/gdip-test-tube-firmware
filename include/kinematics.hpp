@@ -1,6 +1,9 @@
 #ifndef ROBOT_ARM_KINEMATICS_H
 #define ROBOT_ARM_KINEMATICS_H
 
+
+void calculateServoAngles(float x, float y, float z, float &baseAngle, float &shoulderAngle, float &elbowAngle, float &handAngle);
+
 typedef struct
 {
 

@@ -33,7 +33,7 @@ void pwm_test_full_range(int channel);
 void wait_check_for_commands(void);
 void wifi_test_grid_pos(void);
 void state_machine(wifi_cmd_state_t state);
-armPositionData_t wifi_get_grid_posititon(void);
+
 
 /******************************* CONSTANTS ******************************/
 /******************************* VARIABLES ******************************/
@@ -46,12 +46,6 @@ double values[5] = {90, 90, 90, 90, 90};  // Assuming there are 5 values in the 
 
 String command;
 
-armPositionData_t parkingPosition =
-{
-  .x = 33.0f,
-  .y = 231.37f,
-  .z = 295.0f
-};
 
 /*************************** PUBLIC FUNCTIONS ***************************/
 
@@ -66,7 +60,7 @@ void setup()
   debug_initialise();
   wifi_initialise();
   pwm_setup();
-  wifi_test_grid_pos();
+ // wifi_test_grid_pos();
 
   
 
@@ -150,7 +144,7 @@ void state_machine(wifi_cmd_state_t state)
       Serial.println("START");
       Serial.println("Starting recording starting with arm parked.");
 
-      program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
+      //program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
 
       wifi_set_cmd_state(STEADY_STATE);
 
@@ -162,7 +156,7 @@ void state_machine(wifi_cmd_state_t state)
     case RECORD:
     {
 
-      program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_RECORD);
+     // program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_RECORD);
 
       wifi_set_cmd_state(STEADY_STATE);
 
@@ -173,7 +167,7 @@ void state_machine(wifi_cmd_state_t state)
     case END_RECORD:
     {
 
-      program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_END);
+      //program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_END);
 
       wifi_set_cmd_state(STEADY_STATE);
 
@@ -187,7 +181,7 @@ void state_machine(wifi_cmd_state_t state)
 
       if(wifi_get_user_input_text() == "PROG1 PLAY")
       {
-        program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_PLAY);  
+       // program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_PLAY);  
       }
 
       wifi_set_cmd_state(STEADY_STATE);
@@ -208,44 +202,6 @@ void state_machine(wifi_cmd_state_t state)
     }
   }
 }
-
-
-
-
-void wifi_test_grid_pos(void)
-{
-
-    armPositionData_t testPacket;
-    armServoAngles_t calculatedAngles;
-
-    testPacket.x = wifi_get_slider_values().servo1;
-    testPacket.y = wifi_get_slider_values().servo2;
-    testPacket.z = wifi_get_slider_values().servo3;
-    testPacket.wristAngle = wifi_get_slider_values().servo4;
-    testPacket.gripAngle = wifi_get_slider_values().servo5;
- 
-    calculatedAngles = set_arm_position(testPacket);
-
-    //Serial.printf("%lf %lf %lf", calculatedAngles.base, calculatedAngles.humerus, calculatedAngles.ulna);
-
-    pwm_write(calculatedAngles.base, calculatedAngles.humerus, calculatedAngles.ulna, testPacket.wristAngle, testPacket.gripAngle);
-}
-
-
-armPositionData_t wifi_get_grid_posititon(void)
-{
-      armPositionData_t currentGridPosition;
-
-      currentGridPosition.x = wifi_get_slider_values().servo1;
-      currentGridPosition.y = wifi_get_slider_values().servo2;
-      currentGridPosition.z = wifi_get_slider_values().servo3;
-      currentGridPosition.wristAngle = wifi_get_slider_values().servo4;
-      currentGridPosition.gripAngle = wifi_get_slider_values().servo5;
-
-      return currentGridPosition;
-
-}
-
 
 
 
@@ -273,14 +229,6 @@ void wait_check_for_commands(void)
     // Split the command into individual numbers
     int count = sscanf(command.c_str(), "%lf %lf %lf %lf %lf", &values[0], &values[1], &values[2], &values[3], &values[4]);
 
-    armPositionData_t testPacket;
-    armServoAngles_t calculatedAngles;
-
-    testPacket.x = values[0];
-    testPacket.y = values[1];
-    testPacket.z = values[2];
-
-    calculatedAngles = set_arm_position(testPacket);
 
    // pwm_write(calculatedAngles.base, calculatedAngles.humerus, calculatedAngles.ulna);
   }
