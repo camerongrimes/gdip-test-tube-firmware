@@ -207,8 +207,9 @@ void wifi_initialise()
     // For demonstration purposes, let's just turn on an LED on pin 13
     Serial.println("Parking ARM, changing state");
 
-    state = PARK;
 
+
+    state = PARK;
     // Respond to the client
     request->send(200, "text/plain", "Button Clicked");
   });
@@ -219,6 +220,17 @@ void wifi_initialise()
     // Your code to handle the button click should go here
     // For demonstration purposes, let's just turn on an LED on pin 13
     state = START_RECORD;
+    
+    // Respond to the client
+    request->send(200, "text/plain", "Button Clicked");
+  });
+
+
+    server.on("/stop", HTTP_GET, [](AsyncWebServerRequest *request)
+  {
+    // Your code to handle the button click should go here
+    // For demonstration purposes, let's just turn on an LED on pin 13
+    state = STOP;
     
     // Respond to the client
     request->send(200, "text/plain", "Button Clicked");
@@ -270,6 +282,18 @@ void wifi_initialise()
               Serial.printf("Axis found: z\n");
               positonData.z += direction;
           }
+          else if (strcmp(axis.c_str(), "xy") == 0)
+          {
+              Serial.printf("Axis found: xy\n");
+              positonData.x += direction;
+              positonData.y += direction;
+          }
+          else if (strcmp(axis.c_str(), "yx") == 0)
+          {
+              Serial.printf("Axis found: yx\n");
+              positonData.x += direction;
+              positonData.y += direction;
+          }
           else
           {
               /* Do nothing */
@@ -278,6 +302,11 @@ void wifi_initialise()
           Serial.printf("x: %f, y: %f, z: %f\n", positonData.x, positonData.y, positonData.z);
 
           // You can update your servo or perform other actions based on the axis and direction values
+
+          if(state != RECORD || state != START_RECORD)
+          {
+            state = MOVE;
+          }
 
           // Respond to the client
           request->send(200, "text/plain", "Axis updated");
@@ -310,6 +339,12 @@ void wifi_initialise()
               /* Do nothing */
           }
 
+
+          if(state != RECORD || state != START_RECORD)
+          {
+            state = MOVE;
+          }
+
         // Respond to the client
         request->send(200, "text/plain", "Servo action performed");
     } else {
@@ -324,6 +359,7 @@ void wifi_initialise()
     {
       
       userText = request->getParam("text")->value();
+
 
       state = USER_INPUT;
 

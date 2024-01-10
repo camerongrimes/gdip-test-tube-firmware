@@ -80,7 +80,6 @@ void state_machine(wifi_cmd_state_t state)
     {
 
 
-      delay(5000);
 
       wifi_set_cmd_state(STEADY_STATE);
 
@@ -95,7 +94,7 @@ void state_machine(wifi_cmd_state_t state)
       Serial.println("START");
       Serial.println("Starting recording starting with arm parked.");
 
-      //program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
+      program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
 
       wifi_set_cmd_state(STEADY_STATE);
 
@@ -133,7 +132,11 @@ void state_machine(wifi_cmd_state_t state)
 
     case USER_INPUT:
     {
+
+
+      wifi_send_message("SENDING COMMAND");
       
+      delay(1000);
       
       Serial.printf("USER_INPUT: %s\n", wifi_get_user_input_text());
  
@@ -163,10 +166,17 @@ void state_machine(wifi_cmd_state_t state)
         sevenseg_display_char('F');
         misc_play_song();
       }
+      else if(wifi_get_user_input_text() == "SAFE")
+      {
+        wifi_set_cmd_state(PARK);
+      }
       else
       {
         sevenseg_display_char('E');
       }
+
+
+      wifi_send_message("READY");
 
       
       wifi_set_cmd_state(STEADY_STATE);
@@ -175,10 +185,29 @@ void state_machine(wifi_cmd_state_t state)
 
     }
 
+    case MOVE:
+    {
+
+
+      Serial.printf("MOVE: STATE CHANGE\n");
+
+      pwm_write(0, 0, 0, true);
+
+      wifi_set_cmd_state(STEADY_STATE);
+
+    }
+
     case STEADY_STATE:
     {
   
       break;
+    }
+
+    case STOP:
+    {
+      wifi_send_message("ERROR");
+      sevenseg_display_char('E');
+    
     }
 
     default:

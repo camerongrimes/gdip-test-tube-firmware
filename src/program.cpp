@@ -62,7 +62,7 @@ static uint8_t get_cmd_position(programName_t name);
 
 /******************************* CONSTANTS ******************************/
 
-const armPositionData_t parkingPosition = { .x = 33.0f, .y = 231.37f, .z = 295.0f };
+const armPositionData_t parkingPosition = { .x = 100.0f, .y = 100.37f, .z = 100.0f, .gripper = false };
 
 /******************************* VARIABLES ******************************/
 
@@ -304,13 +304,15 @@ programError_t program_play(programName_t name)
             {
 
 
-                pwm_write(programBank.PROG1.positions[commandIndex].x, programBank.PROG1.positions[commandIndex].y, programBank.PROG1.positions[commandIndex].z, false);
+                pwm_write(programBank.PROG1.positions[commandIndex].x, programBank.PROG1.positions[commandIndex].y, 
+                          programBank.PROG1.positions[commandIndex].z, programBank.PROG1.positions[commandIndex].gripper);
 
-                Serial.printf("Command [%d]: [x]: %.2f; [y]: %.2f; [z]: %.2f\n", 
+                Serial.printf("Command [%d]: [x]: %.2f; [y]: %.2f; [z]: %.2f, [gripper]: [%d]\n", 
                 commandIndex,
                 programBank.PROG1.positions[commandIndex].x,
                 programBank.PROG1.positions[commandIndex].y,
-                programBank.PROG1.positions[commandIndex].z);
+                programBank.PROG1.positions[commandIndex].z,
+                programBank.PROG1.positions[commandIndex].gripper);
 
                 delay(1000);
             }

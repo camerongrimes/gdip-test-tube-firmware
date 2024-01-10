@@ -158,7 +158,7 @@
     
     
   <div class="button-container">
-        <button class="main-button" onclick="handleMainButtonClick()">EMERGENCY STOP</button>
+        <button class="main-button" onclick="stop()">EMERGENCY STOP</button>
     </div>
     
     <div class="columns">
@@ -185,6 +185,18 @@
                         <button onclick="updateAxis('z', 1)">Z+</button>
                         <button onclick="updateAxis('z', -1)">Z-</button>
                     </div>
+
+                    <div class="button-group">
+                      <button onclick="updateAxis('xy', 1)">XY+</button>
+                      <button onclick="updateAxis('xy', -1)">XY-</button>
+                  </div>
+
+                  <div class="button-group">
+                    <button onclick="updateAxis('yx', 1)">YX+</button>
+                    <button onclick="updateAxis('yx', -1)">YX-</button>
+                </div>
+
+
                 </div>
 
                 <!-- Container for Open and Close buttons -->
@@ -318,6 +330,17 @@ setInterval(checkArduinoMessageAutomatically, 100);
     function handleButtonRecord() {
       // Send an AJAX request to the server to handle the button click
       fetch("/button_click_record")
+        .then(response => response.text())
+        .then(data => {
+          // Display a message or perform other actions if needed
+          console.log(data);
+        });
+    }
+
+
+    function stop() {
+      // Send an AJAX request to the server to handle the button click
+      fetch("/stop")
         .then(response => response.text())
         .then(data => {
           // Display a message or perform other actions if needed

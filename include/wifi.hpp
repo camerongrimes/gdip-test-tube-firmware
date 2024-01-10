@@ -27,7 +27,9 @@ typedef enum
     RECORD,
     END_RECORD,
     USER_INPUT,
+    MOVE,
     STEADY_STATE,
+    STOP,
 
 }wifi_cmd_state_t;
 
