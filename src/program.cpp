@@ -62,7 +62,7 @@ static uint8_t get_cmd_position(programName_t name);
 
 /******************************* CONSTANTS ******************************/
 
-const armPositionData_t parkingPosition = { .x = 33.0f, .y = 231.37f, .z = 295.0f };
+const armPositionData_t parkingPosition = { .x = 100.0f, .y = 100.0f, .z = 100.0f };
 
 /******************************* VARIABLES ******************************/
 

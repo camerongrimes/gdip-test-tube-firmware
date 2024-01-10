@@ -255,6 +255,8 @@ void wifi_initialise()
           // For demonstration purposes, we'll print the axis and direction to Serial
           Serial.printf("Axis: %s, Direction: %d\n", axis.c_str(), direction);
 
+          direction *= 10;
+
           if (strcmp(axis.c_str(), "x") == 0)
           {
               Serial.printf("Axis found: x\n");

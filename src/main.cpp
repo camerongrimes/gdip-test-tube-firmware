@@ -61,7 +61,11 @@ void setup()
 
 void loop() 
 {
-    state_machine(wifi_get_cmd_state());
+    //state_machine(wifi_get_cmd_state());
+
+    pwm_write(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y,
+              wifi_get_latest_grid_position().z, wifi_get_latest_grid_position().gripper);
+    
     delay(10);
 }
 
@@ -83,6 +87,10 @@ void state_machine(wifi_cmd_state_t state)
       delay(5000);
 
       wifi_set_cmd_state(STEADY_STATE);
+
+      pwm_write(100, 100, 100, false);
+
+      //program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
 
       wifi_send_message("READY");
 
