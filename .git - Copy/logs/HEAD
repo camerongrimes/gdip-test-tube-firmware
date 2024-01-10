@@ -1,0 +1,9 @@
+0000000000000000000000000000000000000000 881d658559d21bc8cb16fdb41da0e2043c128519 Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1698063994 +0100	commit (initial): Initial commit
+881d658559d21bc8cb16fdb41da0e2043c128519 881d658559d21bc8cb16fdb41da0e2043c128519 Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1701007725 +0000	reset: moving to HEAD
+881d658559d21bc8cb16fdb41da0e2043c128519 c2e3baf3ec4630ef98c385810cf2d9755901f30b Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1701007732 +0000	pull: Fast-forward
+c2e3baf3ec4630ef98c385810cf2d9755901f30b 4a28ab78b51a06bd4e764a6391662ebe159c08eb Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1703248524 +0000	commit: Added basic kinematics
+4a28ab78b51a06bd4e764a6391662ebe159c08eb 4a28ab78b51a06bd4e764a6391662ebe159c08eb Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1704829317 +0000	reset: moving to HEAD
+4a28ab78b51a06bd4e764a6391662ebe159c08eb 70bdb5708cc6137029a63f06d97272e3ff1bdc23 Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1704830824 +0000	commit: Added in kinmatics from tom
+70bdb5708cc6137029a63f06d97272e3ff1bdc23 aaade0d59bff46f1fa09e4bee51878243787809b Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1704831409 +0000	commit: Add struct for servo angles
+aaade0d59bff46f1fa09e4bee51878243787809b c74df44ba3be2a0f0cfc37ac695c0993cc74a676 Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1704855871 +0000	commit: Added message output, clickable control for arm and emergncy stop also connected new kinmatics functions up to program storage.
+c74df44ba3be2a0f0cfc37ac695c0993cc74a676 239d562f20462b5a7524e75187d01b1b783f69df Cameron Grimes <62775092+camerongrimes@users.noreply.github.com> 1704858622 +0000	commit: Added emergncy stop

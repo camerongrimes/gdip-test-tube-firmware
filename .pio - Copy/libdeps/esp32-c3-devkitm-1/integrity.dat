@@ -1,0 +1,5 @@
+arduino-libraries/Servo@^1.2.1
+bblanchon/ArduinoJson@^6.21.3
+madhephaestus/ESP32Servo@^1.1.0
+thijse/ArduinoLog@^1.1.1
+ottowinter/ESPAsyncWebServer-esphome@^3.1.0
