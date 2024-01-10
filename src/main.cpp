@@ -11,7 +11,6 @@
 
 #include <Arduino.h>
 
-
 /**************************** USER INCLUDES *****************************/
 
 #include "wifi.hpp"
@@ -21,6 +20,8 @@
 #include "kinematics.hpp"
 #include "program.hpp"
 #include "pwm.hpp"
+#include "misc.hpp"
+#include "sevenseg.hpp"
 
 /******************************* DEFINES ********************************/
 /******************************** ENUMS *********************************/
@@ -40,82 +41,30 @@ void state_machine(wifi_cmd_state_t state);
 
 uint32_t commandIndex;
 uint32_t programLength;
-
-
 double values[5] = {90, 90, 90, 90, 90};  // Assuming there are 5 values in the command
-
 String command;
 
 
 /*************************** PUBLIC FUNCTIONS ***************************/
 
 
-
-
-// Array to store the values
-int valuesServo[5];
-
 void setup() 
 {
+  sevenseg_initialise();
   debug_initialise();
   wifi_initialise();
   pwm_setup();
- // wifi_test_grid_pos();
 
-  
+  sevenseg_display_char('R');
 
 }
-
-
 
 void loop() 
-{ 
-  // Check if data is available to read
-  if (Serial.available() > 0) {
-    // Read the input string
-    String inputString = Serial.readStringUntil('\n');
-
-    // Use a temporary variable for parsing
-    String tempString;
-    int index = 0;
-
-    // Parse the input string and store values in the array
-    for (int i = 0; i < inputString.length(); i++) {
-      char c = inputString.charAt(i);
-
-      // Check for space or newline to separate values
-      if (c == ' ' || c == '\n') {
-        // Convert the temporary string to an integer and store in the array
-        valuesServo[index] = tempString.toInt();
-
-        // Clear the temporary string for the next value
-        tempString = "";
-
-        // Move to the next index in the array
-        index++;
-
-        // Break the loop if we have read all values
-        if (index >= 5) {
-          break;
-        }
-      } else {
-        // Append the character to the temporary string
-        tempString += c;
-      }
-    }
-
-    // Print the values to Serial for verification
-    for (int i = 0; i < 5; i++) 
-    {
-      Serial.println(valuesServo[i]);
-    }
-
-    pwm_write(valuesServo[0], valuesServo[1], valuesServo[2], valuesServo[3], valuesServo[4]);
-
-  }
-    //state_machine(wifi_get_cmd_state());
-   // delay(10);
+{
+    state_machine(wifi_get_cmd_state());
+    delay(10);
 }
+
 
 /*************************** PRIVATE FUNCTIONS ***************************/
 
@@ -135,6 +84,8 @@ void state_machine(wifi_cmd_state_t state)
 
       wifi_set_cmd_state(STEADY_STATE);
 
+      wifi_send_message("READY");
+
       break;
     }
 
@@ -148,6 +99,8 @@ void state_machine(wifi_cmd_state_t state)
 
       wifi_set_cmd_state(STEADY_STATE);
 
+      wifi_send_message("START RECORDING");
+
 
       break;
     }
@@ -156,9 +109,11 @@ void state_machine(wifi_cmd_state_t state)
     case RECORD:
     {
 
-     // program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_RECORD);
+      program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_RECORD);
 
       wifi_set_cmd_state(STEADY_STATE);
+
+      wifi_send_message("RECORD");
 
       break;
     }
@@ -167,9 +122,11 @@ void state_machine(wifi_cmd_state_t state)
     case END_RECORD:
     {
 
-      //program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_END);
+      program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_END);
 
       wifi_set_cmd_state(STEADY_STATE);
+
+      wifi_send_message("END RECORD");
 
       break;
     }
@@ -177,13 +134,41 @@ void state_machine(wifi_cmd_state_t state)
     case USER_INPUT:
     {
       
-      //Serial.printf("USER_INPUT: %s\n", wifi_get_user_input_text());
-
+      
+      Serial.printf("USER_INPUT: %s\n", wifi_get_user_input_text());
+ 
       if(wifi_get_user_input_text() == "PROG1 PLAY")
       {
-       // program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_PLAY);  
+
+        for(int index = 0; index < 4; index++)
+        {
+          sevenseg_display_char('P');
+          delay(500);
+          sevenseg_display_number(1);
+          delay(500);
+        }
+
+        sevenseg_clear();
+
+        wifi_send_message("MOVING");
+
+        program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_PLAY);  
+
+        wifi_send_message("READY");
+
+
+      }
+      else if(wifi_get_user_input_text() == "GODFATHER")
+      {
+        sevenseg_display_char('F');
+        misc_play_song();
+      }
+      else
+      {
+        sevenseg_display_char('E');
       }
 
+      
       wifi_set_cmd_state(STEADY_STATE);
 
       break;
@@ -192,7 +177,7 @@ void state_machine(wifi_cmd_state_t state)
 
     case STEADY_STATE:
     {
-      wifi_test_grid_pos();
+  
       break;
     }
 

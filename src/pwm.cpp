@@ -43,10 +43,17 @@ void pwm_setup(void)
   }
 }
 
-armServoAngles_t pwm_write(int a, int b, int c, int w, int g)
+armServoAngles_t pwm_write(int a, int b, int c, bool wifiSelect)
 {
 
-  servoAngles = calculateServoAngles(wifi_get_slider_values().servo1, wifi_get_slider_values().servo2, wifi_get_slider_values().servo3);
+  if(wifiSelect)
+  {
+      servoAngles = calculateServoAngles(wifi_get_slider_values().servo1, wifi_get_slider_values().servo2, wifi_get_slider_values().servo3);
+  }
+  else
+  {
+      servoAngles = calculateServoAngles(a, b, c);
+  }
 
   ledcWrite(0, map(servoAngles.base, 0, 180, 520, 2036));
   ledcWrite(1, map(servoAngles.shoulder + 20, 0, 180, 500, 1850));

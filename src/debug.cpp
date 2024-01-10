@@ -17,6 +17,9 @@
 
 #define DEBUG_LOG_TAG "debug.c"
 
+#define TEMP_RX 17 
+#define TEMP_TX 18
+
 /******************************** ENUMS *********************************/
 /***************************** STRUCTURES *******************************/
 /************************** FUNCTION PROTOTYPES *************************/
@@ -26,8 +29,7 @@
 
 void debug_initialise(void)
 {
-    Serial.begin(115200);
-   
+    Serial.begin(9600, SERIAL_8N1, TEMP_RX, TEMP_TX);
 }
 
 /*************************** PRIVATE FUNCTIONS ***************************/

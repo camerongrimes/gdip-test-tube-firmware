@@ -12,8 +12,7 @@ typedef struct
     double x;
     double y;
     double z;
-    double wristAngle;
-    double gripAngle;
+    bool gripper;
 
 }armPositionData_t;
 

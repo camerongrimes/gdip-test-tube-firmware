@@ -17,7 +17,7 @@
 /************************** FUNCTION PROTOTYPES *************************/
 
 void pwm_setup(void);
-void pwm_write(int a, int b, int c, int w, int g);
+void pwm_write(int a, int b, int c, bool wifiSelect);
 
 /******************************* GLOBALS ********************************/
 /* Globals are to be avoided unless justified and documented */

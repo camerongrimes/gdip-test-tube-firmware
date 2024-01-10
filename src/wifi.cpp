@@ -24,7 +24,7 @@
 /************************** FUNCTION PROTOTYPES *************************/
 /******************************* CONSTANTS ******************************/
 
-const char* ssid = "ARM";
+const char* ssid = "ARM_2";
 const char* password = "12345678";
 
 /******************************* VARIABLES ******************************/
@@ -39,8 +39,25 @@ servo_slider_values_t servoSliderValues;
 wifi_cmd_state_t state = STEADY_STATE;
 
 String userText;
+String arduinoMessage = "Waiting for control board messages...";
+
+armPositionData_t positonData =
+{
+  .x = 100,
+  .y = 100,
+  .z = 100
+};
 
 /*************************** PUBLIC FUNCTIONS ***************************/
+
+
+
+void wifi_send_message(String message)
+{
+    // Update the global message variable
+    arduinoMessage = message;
+}
+
 
 void wifi_initialise()
 {
@@ -78,6 +95,13 @@ void wifi_initialise()
     //request->send(200, "text/plain", "No changes yet.");
   
   });
+
+
+
+    server.on("/getArduinoMessage", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // Respond to the client with the current Arduino message
+        request->send(200, "text/plain", arduinoMessage.c_str());
+    });
 
   // Handle AJAX request to update the slider value
   server.on("/update", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -222,6 +246,77 @@ void wifi_initialise()
   });
 
 
+  server.on("/updateAxis", HTTP_GET, [](AsyncWebServerRequest *request){
+      if (request->hasParam("axis") && request->hasParam("direction")) {
+          String axis = request->getParam("axis")->value();
+          int direction = request->getParam("direction")->value().toInt();
+
+          // Your logic to handle the axis update goes here
+          // For demonstration purposes, we'll print the axis and direction to Serial
+          Serial.printf("Axis: %s, Direction: %d\n", axis.c_str(), direction);
+
+          if (strcmp(axis.c_str(), "x") == 0)
+          {
+              Serial.printf("Axis found: x\n");
+              positonData.x += direction;
+          }
+          else if (strcmp(axis.c_str(), "y") == 0)
+          {
+              Serial.printf("Axis found: y\n");
+              positonData.y += direction;
+          }
+          else if (strcmp(axis.c_str(), "z") == 0)
+          {
+              Serial.printf("Axis found: z\n");
+              positonData.z += direction;
+          }
+          else
+          {
+              /* Do nothing */
+          }
+
+          Serial.printf("x: %f, y: %f, z: %f\n", positonData.x, positonData.y, positonData.z);
+
+          // You can update your servo or perform other actions based on the axis and direction values
+
+          // Respond to the client
+          request->send(200, "text/plain", "Axis updated");
+      } else {
+          request->send(400, "text/plain", "Bad Request");
+      }
+  });
+
+  server.on("/updateServo", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (request->hasParam("action") && request->hasParam("value")) {
+        String action = request->getParam("action")->value();
+        int value = request->getParam("value")->value().toInt();
+
+        // Your logic to handle servo action goes here
+        // For demonstration purposes, we'll print the action and value to Serial
+        Serial.printf("Action: %s, Value: %d\n", action.c_str(), value);
+
+          if (strcmp(action.c_str(), "open") == 0)
+          {
+              Serial.printf("Axis found: x\n");
+              positonData.gripper = true;
+          }
+          else if (strcmp(action.c_str(), "close") == 0)
+          {
+              Serial.printf("Axis found: y\n");
+              positonData.gripper = false;
+          }
+          else
+          {
+              /* Do nothing */
+          }
+
+        // Respond to the client
+        request->send(200, "text/plain", "Servo action performed");
+    } else {
+        request->send(400, "text/plain", "Bad Request");
+    }
+});
+
     // Handle AJAX request to send user input to ESP32
   server.on("/send_input", HTTP_GET, [](AsyncWebServerRequest *request)
   {
@@ -249,15 +344,15 @@ void wifi_initialise()
 }
 
 
+
  armPositionData_t  wifi_get_latest_grid_position(void)
  {
     armPositionData_t data;
 
-    data.x = servoSliderValues.servo1;
-    data.y = servoSliderValues.servo2;
-    data.z = servoSliderValues.servo3;
-    data.wristAngle = servoSliderValues.servo4;
-    data.gripAngle = servoSliderValues.servo5;
+    data.x = positonData.x;
+    data.y = positonData.y;
+    data.z = positonData.z;
+    data.gripper = positonData.gripper;
 
     return data;
 

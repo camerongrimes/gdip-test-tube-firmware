@@ -303,12 +303,8 @@ programError_t program_play(programName_t name)
             for(int commandIndex = 0; commandIndex <= programBank.PROG1.usedCommands; commandIndex++)
             {
 
-                armPositionData_t testPacket;
-                armServoAngles_t calculatedAngles;
 
-                calculatedAngles = set_arm_position(programBank.PROG1.positions[commandIndex]);
-
-                pwm_write(calculatedAngles.base, calculatedAngles.shoulder, calculatedAngles.elbow, programBank.PROG1.positions[commandIndex].wristAngle, programBank.PROG1.positions[commandIndex].gripAngle);
+                pwm_write(programBank.PROG1.positions[commandIndex].x, programBank.PROG1.positions[commandIndex].y, programBank.PROG1.positions[commandIndex].z, false);
 
                 Serial.printf("Command [%d]: [x]: %.2f; [y]: %.2f; [z]: %.2f\n", 
                 commandIndex,
@@ -407,8 +403,6 @@ static programError_t clear(program_t *program)
         program->positions->x = 0;
         program->positions->y = 0;
         program->positions->z = 0;
-        program->positions->wristAngle = 0;
-        program->positions->gripAngle = 0;
     }
 
     status = success;
@@ -480,15 +474,14 @@ static void store_command(program_t *program, armPositionData_t currentGridPosit
     program->positions[cmdIndex].x = currentGridPosition.x;
     program->positions[cmdIndex].y = currentGridPosition.y;
     program->positions[cmdIndex].z = currentGridPosition.z;
-    program->positions[cmdIndex].wristAngle = currentGridPosition.wristAngle;
-    program->positions[cmdIndex].gripAngle = currentGridPosition.gripAngle;
+    program->positions[cmdIndex].gripper = currentGridPosition.gripper;
 
-    Serial.printf("[store_command]: [cmdIndex: %d], [x: %.2f], [y: %.2f], [z: %.2f], [wristAngle: %.2f], [gripAngle: %.2f]\n", program->usedCommands,
-                                                                                                                               program->positions[cmdIndex].x,
-                                                                                                                               program->positions[cmdIndex].y,
-                                                                                                                               program->positions[cmdIndex].z,
-                                                                                                                               program->positions[cmdIndex].wristAngle,
-                                                                                                                               program->positions[cmdIndex].gripAngle);
+
+    Serial.printf("[store_command]: [cmdIndex: %d], [x: %.2f], [y: %.2f], [z: %.2f], [gripper: %d]\n", program->usedCommands,
+                                                                                                       program->positions[cmdIndex].x,
+                                                                                                       program->positions[cmdIndex].y,
+                                                                                                       program->positions[cmdIndex].z,
+                                                                                                       program->positions[cmdIndex].gripper);
 
 }
 

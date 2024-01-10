@@ -1,140 +1,277 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GDIP-TEST-TUBE</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDIP-TEST-TUBE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
 
-    .header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #fafafa;
-      color: #aaa;
-      padding: 10px;
-    }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fafafa;
+            color: #aaa;
+            padding: 10px;
+        }
 
-    h1 {
-      color: #333;
-    }
+        h1 {
+            color: #333;
+        }
 
-    .columns {
-      display: flex;
-      align-items: flex-start; /* Align the columns to the top */
-      justify-content: center; /* Center the columns horizontally */
-      margin-top: 20px;
-    }
+        .columns {
+            display: flex;
+            align-items: flex-start;
+            /* Align the columns to the top */
+            justify-content: center;
+            /* Center the columns horizontally */
+            margin-top: 20px;
+        }
 
-    .left-column, .right-column {
-      text-align: center;
-      padding: 20px;
-      flex: 1; /* Make the left column expand to fill available space */
-    }
+        .left-column,
+        .right-column {
+            text-align: center;
+            padding: 20px;
+            flex: 1;
+            /* Make the left column expand to fill available space */
+        }
 
-    .left-column {
-      border-right: 5px solid #ccc; /* Add this line for the border */
-      padding-right: 20px; /* Add spacing to the right of the left column */
-      flex: 1; /* Make the left column expand to fill available space */
-    }
+        .left-column {
+            border-right: 5px solid #ccc;
+            /* Add this line for the border */
+            padding-right: 20px;
+            /* Add spacing to the right of the left column */
+            flex: 1;
+            /* Make the left column expand to fill available space */
+        }
 
-    .column-group {
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-      margin: 10px;
-      background-color: #fff;
-      flex: 1; /* Make the left column expand to fill available space */
-    }
+        .column-group {
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            background-color: #fff;
+            flex: 1;
+            /* Make the left column expand to fill available space */
+        }
 
-    .slider-group {
-  
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-      margin: 10px;
-      background-color: #fff;
-      flex: 1; /* Make the slider-group expand to fill available space within the left column */
-    }
+        .slider-group {
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            background-color: #fff;
+            flex: 1;
+            /* Make the slider-group expand to fill available space within the left column */
+        }
+        
+        /* Add new style for the message output */
+        .message-output {
+            background-color: blue;
+            padding: 10px; /* Add padding around the message output */
+            font-size: 18px; /* Increase the text size */
+            color: white; /* Set text color */
+            border-radius: 5px; /* Add rounded corners */
+        }
+        
+        .subtitle {
+            font-weight: bold;
+        }
 
-    .subtitle {
-      font-weight: bold;
-    }
+        input[type="range"] {
+            width: 80%;
+        }
 
-    input[type="range"] {
-      width: 80%;
-    }
+        #sliderValue {
+            font-size: 24px;
+            color: #333;
+        }
 
-    #sliderValue {
-      font-size: 24px;
-      color: #333;
-    }
+        .axis-container {
+            background-color: #e0e0e0;
+            /* Set the background color for the axis container */
+            padding: 5px;
+            border-radius: 15px;
+            margin: 10px;
+        }
 
-    button {
-      width: 100px;
-      height: 40px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      margin: 10px;
-    }
+        .open-close-container {
+            background-color: #e0e0e0;
+            /* Set the background color for the axis container */
+            padding: 5px;
+            border-radius: 15px;
+            margin: 10px;
+        }
 
-    input[type="text"] {
-      width: 90%;
-      padding: 10px;
-      margin: 10px;
-    }
-  </style>
+        .header {
+            background-color: #4CAF50;
+            /* Set the background color for the title */
+            color: #fff;
+            /* Set text color for the title */
+            padding: 10px;
+        }
+
+        button {
+            width: 100px;
+            height: 40px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+        }
+        
+      .button-container {
+            background-color: red;
+            padding: 10px;
+            text-align: center;
+            margin: 10px;
+            border-radius: 5px; /* Add rounded corners */
+        }
+
+        .main-button {
+            font-size: 18px; /* Increase the text size */
+            width: 100%;
+            height: 40px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <h1>GDIP Test Tube Dev</h1>
-  </div>
-  <div class="columns">
-    <div class="left-column">
-      <div class="column-group">
-        <p class="subtitle">Servo Control</p>
-        <div class="slider-group">
-          <p> X <span id="sliderValue1"></span></p>
-          <input type="range" id="slider1" min="0" max="80" value="33" oninput="updateSlider(1, this.value)">
+    <div class="header">
+        <h1>GDIP Test Tube Dev</h1>
+    </div>
+    
+    
+  <div class="button-container">
+        <button class="main-button" onclick="handleMainButtonClick()">EMERGENCY STOP</button>
+    </div>
+    
+    <div class="columns">
+        <div class="left-column">
+            <div class="column-group">
+                <p class="subtitle">Control</p>
+
+                <!-- Container for X, Y, and Z sliders -->
+                <div class="axis-container">
+
+                    <p class="subtitle">Arm Position</p>
+
+                    <div class="button-group">
+                        <button onclick="updateAxis('x', 1)">X+</button>
+                        <button onclick="updateAxis('x', -1)">X-</button>
+                    </div>
+
+                    <div class="button-group">
+                        <button onclick="updateAxis('y', 1)">Y+</button>
+                        <button onclick="updateAxis('y', -1)">Y-</button>
+                    </div>
+
+                    <div class="button-group">
+                        <button onclick="updateAxis('z', 1)">Z+</button>
+                        <button onclick="updateAxis('z', -1)">Z-</button>
+                    </div>
+                </div>
+
+                <!-- Container for Open and Close buttons -->
+                <div class="open-close-container">
+
+                    <p class="subtitle">Gripper Position</p>
+
+                    <div class="button-group">
+                        <button onclick="updateServo('open', 1)">Open</button>
+                    </div>
+
+                    <div class="button-group">
+                        <button onclick="updateServo('close', 1)">Close</button>
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="slider-group">
-          <p> Y <span id="sliderValue2"></span></p>
-          <input type="range" id="slider2" min="150" max="350" value="231" oninput="updateSlider(2, this.value)">
+        <div class="right-column">
+
+            <div class="column-group">
+                <p class="subtitle">Control Panel</p>
+                <input type="text" id="userInput" placeholder="Enter text here">
+                <button id="clickParkArm" onclick="handleButtonParkArm()">PARK</button>
+                <button id="clickStartRecording" onclick="handleButtonStartRecording()">START</button>
+                <button id="clickButtonStressTesta" onclick="handleButtonRecord()">RECORD</button>
+                <button id="clickButtonStressTestb" onclick="handleButtonEndRecord()">END</button>
+                <button id="sendButton" onclick="sendUserInput()">SEND CMD</button>
+            </div>
+
+            <div class="column-group">
+                <p class="subtitle">Message Output</p>
+				<p id="arduinoMessage" class="message-output">Waiting for Arduino messages...</p>
+
+            </div>
+
         </div>
-        <div class="slider-group">
-          <p> Z <span id="sliderValue3"></span></p>
-          <input type="range" id="slider3" min="150" max="350" value="295" oninput="updateSlider(3, this.value)">
-        </div>
-        <div class="slider-group">
-          <p>Servo 4 <span id="sliderValue4"></span></p>
-          <input type="range" id="slider4" min="0" max="180" value="90" oninput="updateSlider(4, this.value)">
-        </div>
-        <div class="slider-group">
-          <p>Servo 5 <span id="sliderValue5"></span></p>
-          <input type="range" id="slider5" min="0" max="180" value="90" oninput="updateSlider(5, this.value)">
-        </div>
-      </div>
     </div>
 
-    <div class="right-column">
-      <div class="column-group">
-        <p class="subtitle">Control Panel</p>
-        <input type="text" id="userInput" placeholder="Enter text here">
-        <button id="clickParkArm" onclick="handleButtonParkArm()">PARK</button>
-        <button id="clickStartRecording" onclick="handleButtonStartRecording()">START</button>
-        <button id="clickButtonStressTesta" onclick="handleButtonRecord()">RECORD</button>
-        <button id="clickButtonStressTestb" onclick="handleButtonEndRecord()">END</button>
-        <button id="sendButton" onclick="sendUserInput()">SEND CMD</button>
-      </div>
-    </div>
-  </div>
-    <script>
+  
+      <script>
+
+
+    function handleButtonClick(buttonId) {
+      // Send an AJAX request to the server to handle the button click
+      fetch("/targetpos")
+        .then(response => response.text())
+        .then(data => {
+          // Display a message or perform other actions if needed
+
+
+          console.log(data);
+        });
+    }
+
+    function checkArduinoMessageAutomatically() {
+    fetch("/getArduinoMessage")
+        .then(response => response.text())
+        .then(data => {
+            const arduinoMessage = document.getElementById("arduinoMessage");
+            // Update the message box with the received message
+            arduinoMessage.textContent = data;
+
+            // Change the color based on the message content
+            updateMessageColor(data);
+        });
+}
+
+function updateMessageColor(message) {
+    const arduinoMessage = document.getElementById("arduinoMessage");
+
+    // Reset background color
+    arduinoMessage.style.backgroundColor = "#fff";
+
+    // Check the content of the message and update the background color accordingly
+    if (message.includes("ERROR")) {
+        arduinoMessage.style.backgroundColor = "red";
+    } else if (message.includes("MOVING")) {
+        arduinoMessage.style.backgroundColor = "orange";
+    } else if (message.includes("READY")) {
+        arduinoMessage.style.backgroundColor = "green";
+    } else {
+        arduinoMessage.style.backgroundColor = "blue";
+    }
+}
+// Update the Arduino message automatically every 5 seconds
+setInterval(checkArduinoMessageAutomatically, 100);
 
     function checkChanges() 
     {
@@ -143,6 +280,7 @@
         .then(data => {
         const sliderValue1 = document.getElementById("sliderValue1");
         const sliderValue2 = document.getElementById("sliderValue2");
+        const arduinoMessage = document.getElementById("arduinoMessage");
         sliderValue1.textContent = data;
         sliderValue2.textContent = data;
       });
@@ -209,6 +347,26 @@
                 errorMessage.value = data;
             });
     }
+
+    function updateAxis(axis, direction) {
+    // Send an AJAX request to the server to update the axis value
+    fetch(`/updateAxis?axis=${axis}&direction=${direction}`)
+        .then(response => response.text())
+        .then(data => {
+            // Display a message or perform other actions if needed
+            console.log(data);
+        });
+}
+
+function updateServo(action, value) {
+    // Send an AJAX request to the server to perform servo action
+    fetch(`/updateServo?action=${action}&value=${value}`)
+        .then(response => response.text())
+        .then(data => {
+            // Display a message or perform other actions if needed
+            console.log(data);
+        });
+}
 
     setInterval(checkChanges, 5000); // Check for changes every 5 seconds
     checkChanges(); // Initial check
