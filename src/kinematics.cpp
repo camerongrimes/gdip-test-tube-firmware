@@ -20,7 +20,7 @@ armServoAngles_t calculateServoAngles(float x, float y, float z)
 
     servoAngles.elbow = (acos((pow(L1, 2) - pow(distanceXYZ, 2) + pow(L2, 2)) / (2 * L1 * L2))) * 180.0 / M_PI;
 
-    servoAngles.gripper = 270 - (servoAngles.shoulder + servoAngles.elbow + 45);
+    servoAngles.wrist = 270 - (servoAngles.shoulder + servoAngles.elbow + 45);
 
     return servoAngles;
 

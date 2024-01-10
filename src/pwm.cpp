@@ -14,6 +14,7 @@
 /**************************** USER INCLUDES *****************************/
 
 #include "wifi.hpp"
+#include "smooth.hpp"
 #include "kinematics.hpp"
 
 /******************************* DEFINES ********************************/
@@ -26,8 +27,6 @@
 
 int servoPins[] = {4, 5, 6, 2, 42};
 int servoNum = sizeof(servoPins) / sizeof(servoPins[0]);
-
-float angleState[4];
 
 armServoAngles_t servoAngles;
 
@@ -43,23 +42,52 @@ void pwm_setup(void)
   }
 }
 
+
+void pwm_write_test(armServoAngles_t servoAngle)
+{
+    ledcWrite(0, map(servoAngle.base, 0, 180, 520, 2036));
+    ledcWrite(1, map(servoAngle.shoulder+15, 0, 180, 500, 1850));
+    ledcWrite(2, map(servoAngle.elbow, 180, 0, 500, 1850));
+    ledcWrite(3, map(servoAngle.wrist, 0, 180, 500, 1850));
+}
+
+
+
 armServoAngles_t pwm_write(int a, int b, int c, bool wifiSelect)
 {
 
+  
+      char buffer[50];
+
+      sprintf(buffer, "x: %d, y: %d, z: %d", a, b, c);
+
+      wifi_send_message(buffer);
+
   if(wifiSelect)
   {
-      servoAngles = calculateServoAngles(wifi_get_slider_values().servo1, wifi_get_slider_values().servo2, wifi_get_slider_values().servo3);
+
+    // smoothMotion(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y, wifi_get_latest_grid_position().z);
+
+    servoAngles = calculateServoAngles(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y, wifi_get_latest_grid_position().z);
+
+      if(wifi_get_latest_grid_position().gripper == true)
+      {
+        ledcWrite(4, map(180, 0, 180, 500, 1850));
+      }
+      else
+      {
+        ledcWrite(4, map(0, 0, 180, 500, 1850));
+      }
   }
   else
   {
-      servoAngles = calculateServoAngles(a, b, c);
+      // smoothMotion(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y, wifi_get_latest_grid_position().z);
+
+      servoAngles = calculateServoAngles(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y, wifi_get_latest_grid_position().z);
   }
 
-  ledcWrite(0, map(servoAngles.base, 0, 180, 520, 2036));
-  ledcWrite(1, map(servoAngles.shoulder + 20, 0, 180, 500, 1850));
-  ledcWrite(2, map(servoAngles.elbow, 180, 0, 500, 1850));
-  ledcWrite(3, map(servoAngles.gripper, 0, 180, 500, 1850));
-
+  // pwm_write_test(servoAngles);
+ 
   return servoAngles;
 
 }

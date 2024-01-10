@@ -59,6 +59,10 @@ void wifi_set_cmd_state(wifi_cmd_state_t updatedState);
 armPositionData_t  wifi_get_latest_grid_position(void);
 void wifi_send_message(String message);
 String wifi_get_user_input_text(void);
+void wifi_set_latest_grid_position(armPositionData_t set);
+
+armPositionData_t wifi_get_previous_grid_position(void);
+void wifi_set_previous_grid_position(armPositionData_t set);
 
 /******************************* GLOBALS ********************************/
 /* Globals are to be avoided unless justified and documented */

@@ -41,11 +41,21 @@ wifi_cmd_state_t state = STEADY_STATE;
 String userText;
 String arduinoMessage = "Waiting for control board messages...";
 
-armPositionData_t positonData =
+
+
+armPositionData_t latestPositonData =
 {
-  .x = 100,
-  .y = 100,
-  .z = 100
+  .x = 0,
+  .y = 150,
+  .z = 200
+};
+
+
+armPositionData_t previousPositonData =
+{
+  .x = 0,
+  .y = 150,
+  .z = 200
 };
 
 /*************************** PUBLIC FUNCTIONS ***************************/
@@ -255,29 +265,43 @@ void wifi_initialise()
           // For demonstration purposes, we'll print the axis and direction to Serial
           Serial.printf("Axis: %s, Direction: %d\n", axis.c_str(), direction);
 
+          wifi_set_previous_grid_position(latestPositonData);
+
           direction *= 10;
 
           if (strcmp(axis.c_str(), "x") == 0)
           {
               Serial.printf("Axis found: x\n");
-              positonData.x += direction;
+              latestPositonData.x += direction;
           }
           else if (strcmp(axis.c_str(), "y") == 0)
           {
               Serial.printf("Axis found: y\n");
-              positonData.y += direction;
+              latestPositonData.y += direction;
           }
           else if (strcmp(axis.c_str(), "z") == 0)
           {
               Serial.printf("Axis found: z\n");
-              positonData.z += direction;
+              latestPositonData.z += direction;
+          }
+          else if (strcmp(axis.c_str(), "xy") == 0)
+          {
+              Serial.printf("Axis found: z\n");
+              latestPositonData.x += direction;
+              latestPositonData.y += direction;
+          }
+          else if (strcmp(axis.c_str(), "yx") == 0)
+          {
+              Serial.printf("Axis found: z\n");
+              latestPositonData.x -= direction;
+              latestPositonData.y += direction;
           }
           else
           {
               /* Do nothing */
           }
 
-          Serial.printf("x: %f, y: %f, z: %f\n", positonData.x, positonData.y, positonData.z);
+          Serial.printf("x: %f, y: %f, z: %f\n", latestPositonData.x, latestPositonData.y, latestPositonData.z);
 
           // You can update your servo or perform other actions based on the axis and direction values
 
@@ -293,6 +317,9 @@ void wifi_initialise()
         String action = request->getParam("action")->value();
         int value = request->getParam("value")->value().toInt();
 
+
+        wifi_set_previous_grid_position(latestPositonData);
+
         // Your logic to handle servo action goes here
         // For demonstration purposes, we'll print the action and value to Serial
         Serial.printf("Action: %s, Value: %d\n", action.c_str(), value);
@@ -300,12 +327,12 @@ void wifi_initialise()
           if (strcmp(action.c_str(), "open") == 0)
           {
               Serial.printf("Axis found: x\n");
-              positonData.gripper = true;
+              latestPositonData.gripper = true;
           }
           else if (strcmp(action.c_str(), "close") == 0)
           {
               Serial.printf("Axis found: y\n");
-              positonData.gripper = false;
+              latestPositonData.gripper = false;
           }
           else
           {
@@ -345,16 +372,50 @@ void wifi_initialise()
 
 }
 
+ void wifi_set_latest_grid_position(armPositionData_t set)
+ {
+    armPositionData_t data;
 
+    latestPositonData.x = set.x;
+    latestPositonData.y = set.y;
+    latestPositonData.z = set.z;
+    latestPositonData.gripper = set.gripper;
+
+ }
 
  armPositionData_t  wifi_get_latest_grid_position(void)
  {
     armPositionData_t data;
 
-    data.x = positonData.x;
-    data.y = positonData.y;
-    data.z = positonData.z;
-    data.gripper = positonData.gripper;
+    data.x = latestPositonData.x;
+    data.y = latestPositonData.y;
+    data.z = latestPositonData.z;
+    data.gripper = latestPositonData.gripper;
+
+    return data;
+
+ }
+
+
+  void wifi_set_previous_grid_position(armPositionData_t set)
+ {
+    armPositionData_t data;
+
+    previousPositonData.x = set.x;
+    previousPositonData.y = set.y;
+    previousPositonData.z = set.z;
+    previousPositonData.gripper = set.gripper;
+
+ }
+
+ armPositionData_t  wifi_get_previous_grid_position(void)
+ {
+    armPositionData_t data;
+
+    data.x = previousPositonData.x;
+    data.y = previousPositonData.y;
+    data.z = previousPositonData.z;
+    data.gripper = previousPositonData.gripper;
 
     return data;
 

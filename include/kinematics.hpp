@@ -24,7 +24,7 @@ typedef struct angleStates
   float base;
   float shoulder;
   float elbow;
-  float gripper;
+  float wrist;
 
 }armServoAngles_t;
 

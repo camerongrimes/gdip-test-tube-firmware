@@ -18,7 +18,7 @@
 
 void pwm_setup(void);
 void pwm_write(int a, int b, int c, bool wifiSelect);
-
+void pwm_write_test(armServoAngles_t servoAngle);
 /******************************* GLOBALS ********************************/
 /* Globals are to be avoided unless justified and documented */
 /************************************************************************/

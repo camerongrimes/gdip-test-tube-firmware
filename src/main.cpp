@@ -22,6 +22,7 @@
 #include "pwm.hpp"
 #include "misc.hpp"
 #include "sevenseg.hpp"
+#include "smooth.hpp"
 
 /******************************* DEFINES ********************************/
 /******************************** ENUMS *********************************/
@@ -44,6 +45,7 @@ uint32_t programLength;
 double values[5] = {90, 90, 90, 90, 90};  // Assuming there are 5 values in the command
 String command;
 
+armPositionData_t armStateXYZ;
 
 /*************************** PUBLIC FUNCTIONS ***************************/
 
@@ -57,14 +59,15 @@ void setup()
 
   sevenseg_display_char('R');
 
+  armStateXYZ = wifi_get_latest_grid_position();
+
 }
 
 void loop() 
 {
-    //state_machine(wifi_get_cmd_state());
+    state_machine(wifi_get_cmd_state());
 
-    pwm_write(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y,
-              wifi_get_latest_grid_position().z, wifi_get_latest_grid_position().gripper);
+   // 
     
     delay(10);
 }
@@ -82,15 +85,24 @@ void state_machine(wifi_cmd_state_t state)
   {
     case PARK:
     {
+      
+      armPositionData_t park =
+      {
+        .x = 0,
+        .y = 150,
+        .z = 200,
+      };
 
+      wifi_set_latest_grid_position(park);
 
-      delay(5000);
+      smoothMotion();
+
+      pwm_write(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y,
+                wifi_get_latest_grid_position().z, false);
 
       wifi_set_cmd_state(STEADY_STATE);
 
-      pwm_write(100, 100, 100, false);
 
-      //program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
 
       wifi_send_message("READY");
 
@@ -103,7 +115,7 @@ void state_machine(wifi_cmd_state_t state)
       Serial.println("START");
       Serial.println("Starting recording starting with arm parked.");
 
-      //program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
+      program_state_machine(PROGRAM_ONE, wifi_get_latest_grid_position(), PROGRAM_START);
 
       wifi_set_cmd_state(STEADY_STATE);
 
@@ -185,6 +197,11 @@ void state_machine(wifi_cmd_state_t state)
 
     case STEADY_STATE:
     {
+
+      smoothMotion();
+
+      pwm_write(wifi_get_latest_grid_position().x, wifi_get_latest_grid_position().y,
+                wifi_get_latest_grid_position().z, false);
   
       break;
     }
